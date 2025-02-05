@@ -20,13 +20,13 @@ public class ApiService : IApiService
 
 	public async Task<ApiResponse> LoginAsync(LoginViewModel model) 
 	{
-		_httpClient.BaseAddress = new Uri("https://localhost:7172/api/Auth/Login/");
-
+		Uri address = new Uri(_httpClient.BaseAddress, "/api/Auth/Login");
+		
 		HttpResponseMessage response;
 		
 		try
 		{
-			response = await _httpClient.PostAsJsonAsync<LoginViewModel>(_httpClient.BaseAddress,
+			response = await _httpClient.PostAsJsonAsync(address,
 			 model, new JsonSerializerOptions(), default);
 		}
 		catch (HttpRequestException ex)
@@ -64,6 +64,5 @@ public class ApiService : IApiService
 		
 		return apiResponse;
 	}
-
-
+	
 }
