@@ -17,8 +17,16 @@ namespace _04LibraryWeb.Controllers
 			_apiService = apiService;
 		}
 
-		public ActionResult Login()
+		public async Task<ActionResult> Login()
 		{
+			string token = Request.Cookies["accessToken"];
+			
+			bool hasVerified = (await _apiService.GetWithAuth("/api/auth/verify-login",token)).IsSuccess;
+
+			if (hasVerified)
+			{
+				return RedirectToAction("Index", "Home");
+			}
 			return View();
 
 		}
@@ -70,6 +78,8 @@ namespace _04LibraryWeb.Controllers
 			return View();
 		}
 
+		
+		
 	}
 }
 
