@@ -143,6 +143,80 @@ namespace _04LibraryWeb.Controllers
 			ViewBag.Message = "Confirmation successful. You may now log in.";
 			return View(model);
 		}
+
+		public async Task<ActionResult> ForgotPassword()
+		{	
+			return await CheckIfAuth();
+		}
+
+		[HttpPost]
+		public async Task<ActionResult> ForgotPassword(ForgotPasswordViewModel model)
+		{
+			if (!ModelState.IsValid)
+			{
+				ModelState.AddModelError("", "Invalid information.");
+				return View(model);
+			}
+
+			ApiResponse result = await _apiService.PostAsync<string, string>("api/auth/forgot-password", model.Email);
+			
+			if (!result.IsSuccess)
+			{
+				switch (result.StatusCode)
+				{
+					case HttpStatusCode.ServiceUnavailable:
+						ModelState.AddModelError("", "Service unavailable.");
+						break;
+					case HttpStatusCode.BadRequest:
+						ModelState.AddModelError("", "Wrong email.");
+						break;
+					default:
+						ModelState.AddModelError("", "Something went wrong.");
+						break;
+				}
+				return View(model);
+			}
+			
+			ViewBag.Message = "Check your email and follow the instructions.";
+			return View(model);
+		}
+		
+		public async Task<ActionResult> ResetPassword()
+		{	
+			return await CheckIfAuth();
+		}
+
+		[HttpPost]
+		public async Task<ActionResult> ResetPassword(ResetPasswordViewModel model)
+		{
+			if (!ModelState.IsValid)
+			{
+				ModelState.AddModelError("", "Invalid information.");
+				return View(model);
+			}
+
+			ApiResponse result = await _apiService.PutAsync<ResetPasswordViewModel, string>("api/auth/reset-password", model);
+			
+			if (!result.IsSuccess)
+			{
+				switch (result.StatusCode)
+				{
+					case HttpStatusCode.ServiceUnavailable:
+						ModelState.AddModelError("", "Service unavailable.");
+						break;
+					case HttpStatusCode.BadRequest:
+						ModelState.AddModelError("", "Wrong email.");
+						break;
+					default:
+						ModelState.AddModelError("", "Something went wrong.");
+						break;
+				}
+				return View(model);
+			}
+			
+			ViewBag.Message = "Your password was successfully reset.";
+			return View(model);
+		}
 		
 		private async Task<ActionResult> CheckIfAuth()
 		{
@@ -156,6 +230,8 @@ namespace _04LibraryWeb.Controllers
 			}
 			return View();
 		}
+		
+		
 	}
 }
 
