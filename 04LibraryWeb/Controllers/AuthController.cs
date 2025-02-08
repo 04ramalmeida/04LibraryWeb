@@ -205,7 +205,7 @@ namespace _04LibraryWeb.Controllers
 						ModelState.AddModelError("", "Service unavailable.");
 						break;
 					case HttpStatusCode.BadRequest:
-						ModelState.AddModelError("", "Wrong email.");
+						ModelState.AddModelError("", "Wrong email or token.");
 						break;
 					default:
 						ModelState.AddModelError("", "Something went wrong.");
