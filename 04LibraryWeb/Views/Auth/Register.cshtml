@@ -1,0 +1,31 @@
+﻿@model _04LibraryWeb.Models.RegisterViewModel
+
+@{
+    ViewBag.Title = "Register an Account";
+    Layout = "_Layout";
+}
+
+
+
+<div class="text-left">
+    <h2>Register</h2>
+    <form method="post" class="container">
+        <p class="text-success">@ViewBag.Message</p>
+        <div asp-validation-summary="ModelOnly"></div>
+        <label for="username">Username: <input type="email" asp-for="Username"/></label>
+        <span asp-validation-for="Username" class="text-warning"></span>
+        <label for="firstname">First Name: <input type="text" asp-for="FirstName"/></label>
+        <span asp-validation-for="FirstName" class="text-warning"></span>
+        <label for="lastname">Last Name: <input type="text" asp-for="LastName"/></label>
+        <span asp-validation-for="LastName" class="text-warning"></span>
+        <label for="password">Password: <input type="password" asp-for="Password"/></label>
+        <span asp-validation-for="Password" class="text-warning"></span>
+        <button type="submit">Register</button>
+    </form>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

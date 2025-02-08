@@ -1,0 +1,18 @@
+﻿@model ConfirmViewModel
+
+@{
+    ViewBag.Title = "Confirm your email";
+    Layout = "_Layout";
+}
+
+<h2>Confirm email</h2>
+
+<form method="post" class="container">
+    <div asp-validation-summary="ModelOnly"></div>
+    <p class="text-success">@ViewBag.Message</p>
+    <label for="email">Email: <input type="email" asp-for="Username"/></label>
+    <span asp-validation-for="Username" class="text-warning"></span>
+    <label for="confirmToken">Confirmation Code: <input  asp-for="Token"/></label>
+    <span asp-validation-for="Token" class="text-warning"></span>
+    <button type="submit">Confirm</button>
+</form>
