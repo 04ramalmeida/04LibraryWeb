@@ -114,6 +114,57 @@ public class ApiService : IApiService
 		
 		return apiResponse;
 	}
+	
+	public async Task<ApiResponse> PutAsyncWithAuth<T1, T2>(string endpointPath,T1 model, string token)
+	{
+		Uri address = new Uri(_httpClient.BaseAddress, endpointPath);
+		
+		HttpResponseMessage response;
+		
+		_httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+		
+		try
+		{
+			response = await _httpClient.PutAsJsonAsync(address,
+				model, new JsonSerializerOptions(), default);
+		}
+		
+		catch (HttpRequestException ex)
+		{
+			return new ApiResponse
+			{
+				IsSuccess = false,
+				StatusCode = HttpStatusCode.ServiceUnavailable, 
+				Message = ex.Message
+			};
+		}
+
+
+		if (!response.IsSuccessStatusCode)
+		{
+			return new ApiResponse
+			{
+				IsSuccess = false,
+				StatusCode = response.StatusCode,
+				Message = response.ReasonPhrase
+			};
+		}
+		
+		var result = await response.Content.ReadAsStringAsync();
+		
+		var apiObject = JsonConvert.DeserializeObject<T2>(result);
+		
+		
+		ApiResponse apiResponse = new ApiResponse();
+		
+		apiResponse.IsSuccess = response.IsSuccessStatusCode;
+		apiResponse.StatusCode = response.StatusCode;
+		apiResponse.Message = response.ReasonPhrase;
+		apiResponse.ApiObject = apiObject;
+		
+		return apiResponse;
+	}
+	
 	public async Task<ApiResponse> GetWithAuth(string endpointPath, string token)
 	{
 		var address = new Uri(_httpClient.BaseAddress, endpointPath);
