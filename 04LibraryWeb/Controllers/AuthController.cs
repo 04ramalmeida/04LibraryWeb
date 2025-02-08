@@ -218,6 +218,55 @@ namespace _04LibraryWeb.Controllers
 			return View(model);
 		}
 		
+		public async Task<ActionResult> ChangePassword()
+		{	
+			string token = Request.Cookies["accessToken"];
+			
+			bool hasVerified = (await _apiService.GetWithAuth("/api/auth/verify-login",token)).IsSuccess;
+
+			if (hasVerified)
+			{
+				return View();
+			}
+			return RedirectToAction("Index", "Home");
+		}
+
+
+		[HttpPost]
+		public async Task<ActionResult> ChangePassword(ChangePasswordViewModel model)
+		{
+			string token = Request.Cookies["accessToken"];
+			
+			if (!ModelState.IsValid)
+			{
+				ModelState.AddModelError("", "Invalid information.");
+				return View(model);
+			}
+
+			ApiResponse result = await _apiService.PutAsyncWithAuth<ChangePasswordViewModel, string>
+				("api/auth/change-password", model, token);
+			
+			if (!result.IsSuccess)
+			{
+				switch (result.StatusCode)
+				{
+					case HttpStatusCode.ServiceUnavailable:
+						ModelState.AddModelError("", "Service unavailable.");
+						break;
+					case HttpStatusCode.BadRequest:
+						ModelState.AddModelError("", "Invalid password(s).");
+						break;
+					default:
+						ModelState.AddModelError("", "Something went wrong.");
+						break;
+				}
+				return View(model);
+			}
+			
+			ViewBag.Message = "Your password was successfully changed.";
+			return View(model);
+		}
+		
 		private async Task<ActionResult> CheckIfAuth()
 		{
 			string token = Request.Cookies["accessToken"];
