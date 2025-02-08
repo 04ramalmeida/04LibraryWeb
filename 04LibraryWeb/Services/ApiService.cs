@@ -19,9 +19,9 @@ public class ApiService : IApiService
 		_httpClient = factory.CreateClient("api");
 	}
 
-	public async Task<ApiResponse> LoginAsync(LoginViewModel model) 
+	public async Task<ApiResponse> PostAsync<T1, T2>(string endpointPath,T1 model)
 	{
-		Uri address = new Uri(_httpClient.BaseAddress, "/api/Auth/Login");
+		Uri address = new Uri(_httpClient.BaseAddress, endpointPath);
 		
 		HttpResponseMessage response;
 		
@@ -53,7 +53,7 @@ public class ApiService : IApiService
 		
 		var result = await response.Content.ReadAsStringAsync();
 		
-		var token = JsonConvert.DeserializeObject<Token>(result);
+		var apiObject = JsonConvert.DeserializeObject<T2>(result);
 		
 		
 		ApiResponse apiResponse = new ApiResponse();
@@ -61,7 +61,7 @@ public class ApiService : IApiService
 		apiResponse.IsSuccess = response.IsSuccessStatusCode;
 		apiResponse.StatusCode = response.StatusCode;
 		apiResponse.Message = response.ReasonPhrase;
-		apiResponse.ApiObject = token;
+		apiResponse.ApiObject = apiObject;
 		
 		return apiResponse;
 	}
