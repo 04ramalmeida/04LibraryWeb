@@ -1,4 +1,7 @@
-﻿namespace _04LibraryWeb.Models;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+
+namespace _04LibraryWeb.Models;
 
 public class UserInfoViewModel
 {
@@ -6,7 +9,11 @@ public class UserInfoViewModel
     
     public required string LastName { get; set; }
 
-    public required string Email { get; set; }
+
+    [DataType(DataType.EmailAddress)]
+    public string? Email { get; set; }
     
-    public required DateTime CreatedOn { get; set; }
+
+    [DataType(DataType.DateTime)]
+    public DateTime? CreatedOn { get; set; }
 }
