@@ -165,6 +165,8 @@ public class ApiService : IApiService
 		return apiResponse;
 	}
 	
+	
+	
 	public async Task<ApiResponse> GetWithAuth(string endpointPath, string token)
 	{
 		var address = new Uri(_httpClient.BaseAddress, endpointPath);

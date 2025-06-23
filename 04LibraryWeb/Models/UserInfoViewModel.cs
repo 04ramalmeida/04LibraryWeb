@@ -9,8 +9,7 @@ public class UserInfoViewModel
     
     public required string LastName { get; set; }
 
-
-    [DataType(DataType.EmailAddress)]
+    
     public string? Email { get; set; }
     
 

@@ -9,7 +9,7 @@ public class LoginViewModel
 
 	[Required]
 	[EmailAddress]
-	public required string Username { get; set; }
+	public required string Email { get; set; }
 	
 	[Required]
 	[PasswordPropertyText(true)]

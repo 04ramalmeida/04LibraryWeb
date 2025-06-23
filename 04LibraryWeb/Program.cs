@@ -1,11 +1,12 @@
 using _04LibraryWeb.Services;
 
 var builder = WebApplication.CreateBuilder(args);
+var Configuration = builder.Configuration;
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddHttpClient("api", c => c.BaseAddress = new Uri("https://localhost:7172"));
+builder.Services.AddHttpClient("api", c => c.BaseAddress = new Uri(Configuration["ApiUrl"]));
 
 builder.Services.AddTransient<IApiService, ApiService>();
 
