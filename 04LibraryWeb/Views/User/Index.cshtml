@@ -1,24 +1,28 @@
 ﻿@model _04LibraryWeb.Models.UserInfoViewModel
 
 @{
-    ViewBag.Title = "User";
+    ViewBag.Title = "User information";
     Layout = "_Layout";
 }
 
 <h2>User</h2>
-<form method="post" class="container">
-    <p class="text-success">@ViewBag.Message</p>
-    <div asp-validation-summary="ModelOnly"></div>
-    <label for="firstName">First Name: <input asp-for="FirstName"/></label>
-    <span asp-validation-for="FirstName" class="text-warning"></span>
-    <label for="lastName">Last Name: <input asp-for="LastName"/></label>
-    <span asp-validation-for="LastName" class="text-warning"></span>
-    <label for="email">Email: <input asp-for="Email" readonly="readonly"/></label>
-    <span asp-validation-for="Email" class="text-warning"></span>
-    <label for="createdAt">Created At: <input asp-for="CreatedOn" readonly="readonly"/></label>
-    <span asp-validation-for="CreatedOn" class="text-warning"></span>
-    <button type="submit">Change</button>
-</form>
+<div class="container">
+    <form method="post" class="col-6">
+        <p class="text-success">@ViewBag.Message</p>
+        <div asp-validation-summary="ModelOnly"></div>
+        <label for="firstName">First Name: <input asp-for="FirstName"/></label>
+        <span asp-validation-for="FirstName" class="text-warning"></span>
+        <label for="lastName">Last Name: <input asp-for="LastName"/></label>
+        <span asp-validation-for="LastName" class="text-warning"></span>
+        <label for="username">Username: <input asp-for="Username" readonly="readonly"/></label>
+        <span asp-validation-for="Username" class="text-warning"></span>
+        <label for="email">Email: <input asp-for="Email" readonly="readonly"/></label>
+        <span asp-validation-for="Email" class="text-warning"></span>
+        <label for="createdAt">Created At: <input asp-for="CreatedOn" readonly="readonly"/></label>
+        <span asp-validation-for="CreatedOn" class="text-warning"></span>
+        <button type="submit">Change</button>
+    </form>
+</div>
 
 @section Scripts {
     @{

@@ -70,7 +70,7 @@ public class UserController : Controller
             
         }
 			
-        ViewBag.Message = "Your password was successfully changed.";
+        ViewBag.Message = "Your information has been successfully changed.";
         return View(model);
     }
     

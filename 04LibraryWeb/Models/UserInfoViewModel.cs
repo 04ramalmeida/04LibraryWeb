@@ -9,7 +9,7 @@ public class UserInfoViewModel
     
     public required string LastName { get; set; }
 
-    
+    public string? Username { get; set; }
     public string? Email { get; set; }
     
 
