@@ -19,22 +19,28 @@ public class UserController : Controller
     public async Task<IActionResult> Index()
     {
         string token = Request.Cookies["accessToken"];
-        ApiResponse response = await _apiService.GetWithAuth("/api/user/user-info", token);
-        if (!response.IsSuccess)
+        ApiResponse response, aviResponse;
+
+        try
         {
-            switch (response.StatusCode)
+            response = await _apiService.GetWithAuth("/api/user/user-info", token);
+            aviResponse = (await _apiService.GetWithAuth("api/user/user-pic", token));
+        }
+        catch (Exception e)
+        {
+            switch (e.Message)
             { //TODO: Replace with proper error pages
-                case HttpStatusCode.ServiceUnavailable:
-                    return View("~/Views/Shared/Error.cshtml");
-                case HttpStatusCode.BadRequest:
-                    return View("~/Views/Shared/Error.cshtml");
-                case HttpStatusCode.Unauthorized:
-                    return View("~/Views/Shared/Error.cshtml");
+                
                 default:
                     return View("~/Views/Shared/Error.cshtml");
                     
             }
         }
+        
+        
+        
+        string avatarUrl = JsonConvert.DeserializeObject<string>(aviResponse.ApiObject.ToString());
+        ViewBag.AvatarUrl = avatarUrl;
         UserInfoViewModel userInfo = JsonConvert.DeserializeObject<UserInfoViewModel>(response.ApiObject.ToString());
         return View(userInfo);
     }
