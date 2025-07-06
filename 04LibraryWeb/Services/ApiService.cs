@@ -213,4 +213,53 @@ public class ApiService : IApiService
 		
 		return apiResponse;
 	}
+
+	public async Task<ApiResponse> PutFormAsyncWithAuth(string endpointPath, MultipartFormDataContent formData, string token)
+	{
+		var address = new Uri(_httpClient.BaseAddress, endpointPath);
+		
+		HttpResponseMessage response;
+
+		_httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+		try
+		{
+			response = await _httpClient.PutAsync(address, formData);
+		}
+		catch (HttpRequestException ex)
+		{
+			return new ApiResponse
+			{
+				IsSuccess = false,
+				StatusCode = HttpStatusCode.ServiceUnavailable, 
+				Message = ex.Message
+			};
+		}
+		
+		var debug = await response.Content.ReadAsStringAsync();
+		
+		if (!response.IsSuccessStatusCode)
+		{
+			return new ApiResponse
+			{
+				IsSuccess = false,
+				StatusCode = response.StatusCode,
+				Message = response.ReasonPhrase
+			};
+		}
+		
+		ApiResponse apiResponse = new ApiResponse();
+		
+		apiResponse.IsSuccess = response.IsSuccessStatusCode;
+		apiResponse.StatusCode = response.StatusCode;
+		apiResponse.Message = response.ReasonPhrase;
+		var responseString = await response.Content.ReadAsStringAsync();
+		if (responseString != null)
+		{
+			apiResponse.ApiObject = responseString;
+		}
+		
+		
+		return apiResponse;
+	}
 }

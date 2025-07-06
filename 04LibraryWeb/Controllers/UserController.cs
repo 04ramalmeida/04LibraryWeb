@@ -1,4 +1,6 @@
 ﻿using System.Net;
+using System.Net.Http.Headers;
+using System.Net.Mime;
 using _04LibraryWeb.Models;
 using _04LibraryWeb.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -79,17 +81,35 @@ public class UserController : Controller
         ViewBag.Message = "Your information has been successfully changed.";
         return View(model);
     }
+
+
     
-    private async Task<ActionResult> CheckIfAuth()
+    public async Task<IActionResult> UploadAvatar(AvatarViewModel model)
     {
         string token = Request.Cookies["accessToken"];
-			
-        bool hasVerified = (await _apiService.GetWithAuth("/api/auth/verify-login",token)).IsSuccess;
 
-        if (hasVerified)
+        var content = new MultipartFormDataContent();
+        MemoryStream memoryStream = new MemoryStream();
+        await model.AvatarFile.CopyToAsync(memoryStream);
+        byte[] imageArray = memoryStream.ToArray();
+        content.Add(new ByteArrayContent(imageArray), "file", model.AvatarFile.FileName);
+        //var formDataPair = new KeyValuePair<string, string>("file", string.Empty);
+        
+        try
         {
-            return View();
+            var response = (await _apiService.PutFormAsyncWithAuth("api/user/user-pic", content, token));
         }
-        return RedirectToAction("Index", "Home");
+        catch (Exception e)
+        {
+            switch (e.Message)
+            { //TODO: Replace with proper error pages
+                
+                default:
+                    return View("~/Views/Shared/Error.cshtml");
+                    
+            }
+        }
+
+        return RedirectToAction("Index");
     }
 }

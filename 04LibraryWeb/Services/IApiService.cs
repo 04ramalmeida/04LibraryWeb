@@ -12,5 +12,7 @@ public interface IApiService
     Task<ApiResponse> PutAsync<T1, T2>(string endpointPath, T1 model);
 
     Task<ApiResponse> PutAsyncWithAuth<T1, T2>(string endpointPath, T1 model, string token);
+    
+    Task<ApiResponse> PutFormAsyncWithAuth(string endpointPath, MultipartFormDataContent formData, string token);
 
 }
